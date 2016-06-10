@@ -11,7 +11,7 @@ export default class App extends React.Component {
         <div>
         Home 1 1 1
 
-        <button className="btn btn-default">Hello World</button>
+        <button className="btn btn-warning">Hello World</button>
         </div>
     );
   }

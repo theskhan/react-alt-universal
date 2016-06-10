@@ -8,10 +8,6 @@ var publicPath = "assets/";
 var WEBPACK_HOST = "localhost";
 var WEBPACK_PORT = 3001;
 
-var extractCSS = new ExtractTextPlugin('styles/app.css', {
-  allChunks: true
-});
-
 var commonLoaders = [
   {
     /*
@@ -80,7 +76,7 @@ module.exports = [
           '&sourceMap!sass?sourceMap&outputStyle=expanded' +
           '&includePaths[]=' + (path.resolve(__dirname, '../node_modules'))
         },
-        {test: /\.css$/i, loader: extractCSS.extract(['css'])},
+        { test: /\.css$/, loader: "style-loader!css-loader" }
       ])
     },
     resolve: {
@@ -91,8 +87,7 @@ module.exports = [
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoErrorsPlugin(),
-      extractCSS
+      new webpack.NoErrorsPlugin()
     ]
   }, {
     // The configuration for the server-side rendering
@@ -121,11 +116,11 @@ module.exports = [
           '&sourceMap!sass?sourceMap&outputStyle=expanded' +
           '&includePaths[]=' + (path.resolve(__dirname, '../node_modules'))
         },
-        {test: /\.css$/i, loader: extractCSS.extract(['css'])},
+        { test: /\.css$/, loader: "style-loader!css-loader" }
       ])
     },
     plugins: [
-      extractCSS
+      
     ],
     resolve: {
       extensions: ['', '.react.js', '.js', '.jsx', '.scss'],

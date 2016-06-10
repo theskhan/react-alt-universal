@@ -1,6 +1,0 @@
-{
-  "name": "React Alt Universal",
-  "description": "A barebones Node.js app using ReactJS in Flux (Alt), using Webpack as a module bundler",
-  "repository": "https://github.com/theskhan/react-alt-universal",
-  "keywords": ["node", "express", "static", "react", "altjs", "webpack"]  
-}

@@ -8,6 +8,10 @@ var publicPath = "assets/";
 var WEBPACK_HOST = "localhost";
 var WEBPACK_PORT = 3001;
 
+var extractCSS = new ExtractTextPlugin('styles/app.css', {
+  allChunks: true
+});
+
 var commonLoaders = [
   {
     /*
@@ -20,7 +24,9 @@ var commonLoaders = [
   },
   { test: /\.png$/, loader: "url-loader" },
   { test: /\.jpg$/, loader: "file-loader" },
-  { test: /\.html$/, loader: "html-loader" }
+  { test: /\.html$/, loader: "html-loader" },
+  { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&minetype=application/font-woff" },
+  { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" }
 ];
 
 module.exports = [
@@ -48,9 +54,9 @@ module.exports = [
      */
     context: path.join(__dirname, "..", "app"),
     entry: {
-      app:[ 'webpack-dev-server/client?http://' + WEBPACK_HOST + ":" + WEBPACK_PORT,
-       'webpack/hot/only-dev-server',
-        "./client" ]
+      app: ['webpack-dev-server/client?http://' + WEBPACK_HOST + ":" + WEBPACK_PORT,
+        'webpack/hot/only-dev-server',
+        "./client"]
     },
     output: {
       // The output directory as absolute path
@@ -68,11 +74,13 @@ module.exports = [
         loaders: ["eslint"]
       }],
       loaders: commonLoaders.concat([
-          { test: /\.scss$/,
-            loader: 'style!css?module&localIdentName=[local]__[hash:base64:5]' +
-              '&sourceMap!sass?sourceMap&outputStyle=expanded' +
-              '&includePaths[]=' + (path.resolve(__dirname, '../node_modules'))
-          }
+        {
+          test: /\.scss$/,
+          loader: 'style!css?module&localIdentName=[local]__[hash:base64:5]' +
+          '&sourceMap!sass?sourceMap&outputStyle=expanded' +
+          '&includePaths[]=' + (path.resolve(__dirname, '../node_modules'))
+        },
+        {test: /\.css$/i, loader: extractCSS.extract(['css'])},
       ])
     },
     resolve: {
@@ -82,8 +90,9 @@ module.exports = [
       ]
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+      new webpack.HotModuleReplacementPlugin(),
+      new webpack.NoErrorsPlugin(),
+      extractCSS
     ]
   }, {
     // The configuration for the server-side rendering
@@ -106,13 +115,18 @@ module.exports = [
     externals: /^[a-z\-0-9]+$/,
     module: {
       loaders: commonLoaders.concat([
-          { test: /\.scss$/,
-            loader: 'css/locals?module&localIdentName=[local]__[hash:base64:5]' +
-              '&sourceMap!sass?sourceMap&outputStyle=expanded' +
-              '&includePaths[]=' + (path.resolve(__dirname, '../node_modules'))
-          }
+        {
+          test: /\.scss$/,
+          loader: 'css/locals?module&localIdentName=[local]__[hash:base64:5]' +
+          '&sourceMap!sass?sourceMap&outputStyle=expanded' +
+          '&includePaths[]=' + (path.resolve(__dirname, '../node_modules'))
+        },
+        {test: /\.css$/i, loader: extractCSS.extract(['css'])},
       ])
     },
+    plugins: [
+      extractCSS
+    ],
     resolve: {
       extensions: ['', '.react.js', '.js', '.jsx', '.scss'],
       modulesDirectories: [

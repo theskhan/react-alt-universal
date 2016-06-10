@@ -5,6 +5,10 @@ var webpack = require("webpack");
 var assetsPath = path.join(__dirname, "..", "public", "assets");
 var publicPath = "assets/";
 
+var extractCSS = new ExtractTextPlugin('styles/app.css', {
+  allChunks: true
+});
+
 var commonLoaders = [
   {
     /*
@@ -13,16 +17,19 @@ var commonLoaders = [
      */
     test: /\.js$|\.jsx$/,
     loader: "babel-loader?stage=0",
-    include: path.join(__dirname, "..",  "app")
+    include: path.join(__dirname, "..", "app")
   },
   { test: /\.png$/, loader: "url-loader" },
   { test: /\.jpg$/, loader: "file-loader" },
-  { test: /\.html$/, loader: "html-loader" },
-  { test: /\.scss$/,
+  { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&minetype=application/font-woff" },
+  { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
+  {
+    test: /\.scss$/,
     loader: ExtractTextPlugin.extract('style', 'css?module&localIdentName=[local]__[hash:base64:5]' +
       '&sourceMap!sass?sourceMap&outputStyle=expanded' +
       '&includePaths[]=' + (path.resolve(__dirname, '../node_modules')))
-  }
+  },
+  {test: /\.css$/i, loader: extractCSS.extract(['css'])} 
 ];
 
 module.exports = [
@@ -77,9 +84,10 @@ module.exports = [
       ]
     },
     plugins: [
-        // extract inline css from modules into separate files
-        new ExtractTextPlugin("styles/main.css"),
-        new webpack.optimize.UglifyJsPlugin()
+      // extract inline css from modules into separate files
+      new ExtractTextPlugin("styles/main.css"),
+      extractCSS,
+      new webpack.optimize.UglifyJsPlugin()
     ]
   }, {
     // The configuration for the server-side rendering
@@ -109,9 +117,10 @@ module.exports = [
       ]
     },
     plugins: [
-        // extract inline css from modules into separate files
-        new ExtractTextPlugin("styles/main.css"),
-        new webpack.optimize.UglifyJsPlugin()
+      // extract inline css from modules into separate files
+      new ExtractTextPlugin("styles/main.css"),
+      extractCSS,
+      new webpack.optimize.UglifyJsPlugin()
     ]
   }
 ];

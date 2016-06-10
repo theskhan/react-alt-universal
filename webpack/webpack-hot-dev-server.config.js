@@ -91,7 +91,8 @@ module.exports = [
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoErrorsPlugin()
+      new webpack.NoErrorsPlugin(),
+      extractCSS
     ]
   }, {
     // The configuration for the server-side rendering

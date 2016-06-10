@@ -2,13 +2,8 @@ import React from 'react';
 import AltContainer from 'alt-container';
 import UserStore from 'stores/UserStore';
 import TopicStore from 'stores/TopicStore';
-import Navigation from 'components/Navigation';
 
 import 'scss/main';
-
-if (typeof window !== 'undefined') {
-  require('bootstrap/dist/css/bootstrap.min.css');
-}
 
 /*
  * This component operates as a "Controller-View". It listens for changes in the
@@ -32,7 +27,6 @@ export default class App extends React.Component {
         UserStore: UserStore,
         TopicStore: TopicStore
       }}>
-        <Navigation />
         {this.props.children}
       </AltContainer>
     );
